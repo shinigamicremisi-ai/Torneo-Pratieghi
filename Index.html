@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Torneo di Bocce — Pratieghi</title>
+  <meta name="description" content="Torneo di Bocce di Pratieghi: partecipanti, coppie, tabellone e campioni dell'edizione in corso.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="hero">
+    <p class="eyebrow">Da generazioni, sulla ghiaia della piazza</p>
+    <h1>
+      Torneo di Bocce
+      <span class="luogo">Pratieghi</span>
+    </h1>
+    <div class="edizione">
+      <span class="pallina"></span>
+      <span id="badge-edizione">Edizione —</span>
+    </div>
+  </header>
+
+  <div class="festone" aria-hidden="true"></div>
+
+  <nav class="selettore-edizione">
+    <label for="selettore-anno" style="font-family:var(--font-mono); font-size:0.85rem; align-self:center;">
+      Sfoglia edizione:
+    </label>
+    <select id="selettore-anno" aria-label="Scegli l'edizione da visualizzare"></select>
+    <a class="btn" href="albo-oro.html">Hall of Fame →</a>
+  </nav>
+
+  <main>
+
+    <section class="sezione" id="sez-partecipanti">
+      <h2 class="sezione-titolo"><span class="num">01</span> Partecipanti</h2>
+      <p class="sezione-sottotitolo">Chi scende in campo quest'anno.</p>
+      <div class="griglia-partecipanti">
+        <div class="gruppo-partecipanti">
+          <h3>Uomini</h3>
+          <ul class="lista-nomi" id="lista-uomini"></ul>
+        </div>
+        <div class="gruppo-partecipanti">
+          <h3>Donne</h3>
+          <ul class="lista-nomi" id="lista-donne"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="sezione" id="sez-coppie">
+      <h2 class="sezione-titolo"><span class="num">02</span> Coppie</h2>
+      <p class="sezione-sottotitolo">Il risultato del sorteggio.</p>
+      <div class="griglia-coppie" id="griglia-coppie"></div>
+    </section>
+
+    <section class="sezione" id="sez-tabellone">
+      <h2 class="sezione-titolo"><span class="num">03</span> Tabellone</h2>
+      <p class="sezione-sottotitolo">Scorri per vedere tutti i turni, dal primo alla finale.</p>
+      <div class="tabellone-wrap">
+        <div class="tabellone" id="tabellone"></div>
+      </div>
+      <div class="azioni-pagina">
+        <button class="btn" id="btn-pdf">📄 Scarica tabellone (PDF)</button>
+        <button class="btn" id="btn-stampa">🖨️ Stampa</button>
+      </div>
+    </section>
+
+    <section class="sezione" id="sez-campioni">
+      <h2 class="sezione-titolo"><span class="num">04</span> Campioni</h2>
+      <div class="blocco-campioni card" id="blocco-campioni"></div>
+    </section>
+
+  </main>
+
+  <footer class="footer-pubblico">
+    Torneo di Bocce di Pratieghi — <a href="admin/login.html">Area amministratore</a>
+  </footer>
+
+  <script type="module" src="js/pagina-pubblica.js"></script>
+  <script>
+    document.getElementById("btn-stampa").addEventListener("click", () => window.print());
+    document.getElementById("btn-pdf").addEventListener("click", () => {
+      alert("L'esportazione PDF sarà attivata nella prossima fase del progetto.");
+    });
+  </script>
+</body>
+</html>
