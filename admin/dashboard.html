@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="it">
 <head>
@@ -10,6 +11,7 @@
     :root {
       --cipresso: #2B3D2F;
       --terracotta: #B8503B;
+      --terracotta-scuro: #9A3F2E;
       --carta: #F6EFDF;
       --campo-ghiaia: #E9DCC3;
       --campo-ghiaia-scuro: #D8C7A3;
@@ -20,6 +22,7 @@
       --font-body: 'Karla', sans-serif;
       --font-mono: 'IBM Plex Mono', monospace;
       --radius: 4px;
+      --shadow-soft: 0 6px 20px rgba(35, 40, 31, 0.12);
     }
 
     * { box-sizing: border-box; }
@@ -29,6 +32,7 @@
       font-family: var(--font-body);
       background: var(--campo-ghiaia);
       color: var(--inchiostro);
+      line-height: 1.5;
     }
 
     .topbar-admin {
@@ -59,43 +63,235 @@
       font-family: var(--font-mono);
       font-size: 0.85rem;
       letter-spacing: 0.03em;
-      padding: 0.65rem 1.3rem;
+      padding: 0.65rem 1.2rem;
       border-radius: var(--radius);
-      border: 1.5px solid var(--carta);
+      border: 1.5px solid var(--inchiostro);
       background: transparent;
-      color: var(--carta);
+      color: var(--inchiostro);
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .btn:hover { background: var(--carta); color: var(--inchiostro); }
+    .topbar-admin .btn {
+      border-color: var(--carta);
+      color: var(--carta);
+    }
+    .topbar-admin .btn:hover { background: var(--carta); color: var(--inchiostro); }
 
-    .sezione {
-      max-width: 1080px;
+    .btn-primario {
+      background: var(--terracotta);
+      border-color: var(--terracotta);
+      color: var(--carta);
+    }
+    .btn-primario:hover { background: var(--terracotta-scuro); }
+
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .contenitore {
+      max-width: 960px;
       margin: 0 auto;
-      padding: 3.2rem 1.5rem;
+      padding: 2rem 1.2rem 4rem;
     }
 
-    .sezione-titolo {
-      font-family: var(--font-display);
-      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
-      font-weight: 600;
-      margin: 0 0 0.3rem;
+    .barra-edizione {
+      background: var(--carta);
+      border: 1px solid var(--campo-ghiaia-scuro);
+      border-radius: var(--radius);
+      padding: 1.2rem;
       display: flex;
-      align-items: baseline;
-      gap: 0.7rem;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
     }
 
-    .sezione-titolo .num {
+    .barra-edizione label {
       font-family: var(--font-mono);
-      font-size: 0.9rem;
-      color: var(--terracotta);
-      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--inchiostro-soft);
     }
 
-    .sezione-sottotitolo {
+    .barra-edizione select {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      padding: 0.5rem 0.8rem;
+      border: 1.5px solid var(--inchiostro);
+      border-radius: var(--radius);
+      background: var(--carta);
+      color: var(--inchiostro);
+    }
+
+    .card {
+      background: var(--carta);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--campo-ghiaia-scuro);
+      padding: 1.6rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .card h2 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      margin: 0 0 0.3rem;
+    }
+
+    .card .sottotitolo {
       color: var(--inchiostro-soft);
-      margin: 0 0 2rem;
-      font-size: 0.98rem;
+      font-size: 0.92rem;
+      margin: 0 0 1.2rem;
+    }
+
+    .griglia-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.4rem;
+    }
+    @media (max-width: 640px) {
+      .griglia-2 { grid-template-columns: 1fr; }
+    }
+
+    .gruppo h3 {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--terracotta-scuro);
+      margin: 0 0 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .gruppo h3 .conteggio {
+      background: var(--campo-ghiaia);
+      color: var(--inchiostro);
+      padding: 0.1rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+    }
+
+    .form-riga {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-riga input[type=text] {
+      flex: 1;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      padding: 0.6rem 0.75rem;
+      border: 1.5px solid var(--campo-ghiaia-scuro);
+      border-radius: var(--radius);
+    }
+
+    .form-riga input:focus { outline: none; border-color: var(--terracotta); }
+
+    .lista-nomi {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      max-height: 340px;
+      overflow-y: auto;
+    }
+
+    .lista-nomi li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.7rem;
+      border-bottom: 1px dashed var(--campo-ghiaia-scuro);
+      font-size: 0.95rem;
+    }
+
+    .lista-nomi li button {
+      border: none;
+      background: none;
+      color: var(--terracotta-scuro);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    .lista-nomi li button:hover { text-decoration: underline; }
+
+    .vuoto {
+      color: var(--inchiostro-soft);
+      font-style: italic;
+      font-size: 0.9rem;
+      padding: 0.6rem 0;
+    }
+
+    details.blocco-incolla {
+      margin-top: 0.6rem;
+    }
+    details.blocco-incolla summary {
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--terracotta-scuro);
+    }
+    details.blocco-incolla textarea {
+      width: 100%;
+      margin-top: 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      padding: 0.6rem;
+      border: 1.5px solid var(--campo-ghiaia-scuro);
+      border-radius: var(--radius);
+      resize: vertical;
+      min-height: 90px;
+    }
+    details.blocco-incolla .btn { margin-top: 0.5rem; }
+
+    .messaggio {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      padding: 0.6rem 0.9rem;
+      border-radius: var(--radius);
+      margin-bottom: 1.2rem;
+      display: none;
+    }
+    .messaggio.visibile { display: block; }
+    .messaggio.errore {
+      background: rgba(184, 80, 59, 0.1);
+      border: 1px solid var(--terracotta);
+      color: var(--terracotta-scuro);
+    }
+    .messaggio.successo {
+      background: rgba(43, 61, 47, 0.08);
+      border: 1px solid var(--cipresso);
+      color: var(--cipresso);
+    }
+
+    .stato-vuoto-edizione {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      color: var(--inchiostro-soft);
+    }
+
+    .nuova-edizione-box {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nuova-edizione-box input[type=number] {
+      width: 100px;
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      padding: 0.5rem 0.7rem;
+      border: 1.5px solid var(--inchiostro);
+      border-radius: var(--radius);
     }
   </style>
 </head>
@@ -109,22 +305,36 @@
     <button class="btn" id="btn-logout">Esci</button>
   </div>
 
-  <main class="sezione">
-    <h2 class="sezione-titolo"><span class="num">✓</span> Accesso riuscito</h2>
-    <p class="sezione-sottotitolo">
-      Il login con Firebase funziona correttamente. Questa è una dashboard
-      provvisoria: nella prossima fase costruiamo qui la gestione di
-      edizioni, partecipanti e sorteggio.
-    </p>
-  </main>
+  <div class="contenitore">
+
+    <div class="barra-edizione">
+      <label for="selettore-edizione">Edizione:</label>
+      <select id="selettore-edizione"><option>Caricamento…</option></select>
+      <button class="btn" id="btn-mostra-nuova">+ Nuova edizione</button>
+      <div class="nuova-edizione-box" id="box-nuova-edizione" style="display:none;">
+        <input type="number" id="input-nuovo-anno" placeholder="es. 2027">
+        <button class="btn btn-primario" id="btn-crea-edizione">Crea</button>
+        <button class="btn" id="btn-annulla-nuova">Annulla</button>
+      </div>
+    </div>
+
+    <div class="messaggio" id="messaggio"></div>
+
+    <div id="contenuto-edizione">
+      <div class="stato-vuoto-edizione">Nessuna edizione selezionata.</div>
+    </div>
+
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import {
-      getAuth,
-      onAuthStateChanged,
-      signOut
+      getAuth, onAuthStateChanged, signOut
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      getFirestore, doc, setDoc, getDoc, collection, getDocs,
+      addDoc, deleteDoc, query, orderBy, writeBatch
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDLqQY2FLbEJvkkglQE_Eq_bfR1GhYhw1U",
@@ -137,15 +347,29 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
+    // ---------- Elementi della pagina ----------
     const emailUtente = document.getElementById("email-utente");
     const btnLogout = document.getElementById("btn-logout");
+    const selettoreEdizione = document.getElementById("selettore-edizione");
+    const btnMostraNuova = document.getElementById("btn-mostra-nuova");
+    const boxNuovaEdizione = document.getElementById("box-nuova-edizione");
+    const inputNuovoAnno = document.getElementById("input-nuovo-anno");
+    const btnCreaEdizione = document.getElementById("btn-crea-edizione");
+    const btnAnnullaNuova = document.getElementById("btn-annulla-nuova");
+    const contenutoEdizione = document.getElementById("contenuto-edizione");
+    const boxMessaggio = document.getElementById("messaggio");
 
+    let annoCorrente = null;
+
+    // ---------- Autenticazione ----------
     onAuthStateChanged(auth, user => {
       if (!user) {
         window.location.href = "login.html";
       } else {
         emailUtente.textContent = user.email;
+        caricaEdizioni();
       }
     });
 
@@ -153,6 +377,219 @@
       await signOut(auth);
       window.location.href = "login.html";
     });
+
+    // ---------- Messaggi ----------
+    function mostraMessaggio(testo, tipo) {
+      boxMessaggio.textContent = testo;
+      boxMessaggio.className = `messaggio visibile ${tipo}`;
+      setTimeout(() => boxMessaggio.classList.remove("visibile"), 4000);
+    }
+
+    // ---------- Gestione edizioni ----------
+    async function caricaEdizioni() {
+      const q = query(collection(db, "tornei"), orderBy("__name__", "desc"));
+      const snap = await getDocs(q);
+      selettoreEdizione.innerHTML = "";
+
+      if (snap.empty) {
+        selettoreEdizione.innerHTML = `<option value="">Nessuna edizione</option>`;
+        renderStatoVuoto();
+        return;
+      }
+
+      snap.forEach(docSnap => {
+        const opt = document.createElement("option");
+        opt.value = docSnap.id;
+        opt.textContent = docSnap.id;
+        selettoreEdizione.appendChild(opt);
+      });
+
+      annoCorrente = selettoreEdizione.value;
+      renderEdizione(annoCorrente);
+    }
+
+    selettoreEdizione.addEventListener("change", () => {
+      annoCorrente = selettoreEdizione.value;
+      renderEdizione(annoCorrente);
+    });
+
+    btnMostraNuova.addEventListener("click", () => {
+      boxNuovaEdizione.style.display = "flex";
+      inputNuovoAnno.focus();
+    });
+
+    btnAnnullaNuova.addEventListener("click", () => {
+      boxNuovaEdizione.style.display = "none";
+      inputNuovoAnno.value = "";
+    });
+
+    btnCreaEdizione.addEventListener("click", async () => {
+      const anno = inputNuovoAnno.value.trim();
+      if (!anno || anno.length !== 4) {
+        mostraMessaggio("Inserisci un anno valido, es. 2027.", "errore");
+        return;
+      }
+
+      const rifDoc = doc(db, "tornei", anno);
+      const esistente = await getDoc(rifDoc);
+      if (esistente.exists()) {
+        mostraMessaggio(`L'edizione ${anno} esiste già.`, "errore");
+        return;
+      }
+
+      await setDoc(rifDoc, {
+        dimensioneTabellone: null,
+        bloccato: false,
+        dataCreazione: new Date().toISOString()
+      });
+
+      mostraMessaggio(`Edizione ${anno} creata.`, "successo");
+      boxNuovaEdizione.style.display = "none";
+      inputNuovoAnno.value = "";
+      await caricaEdizioni();
+      selettoreEdizione.value = anno;
+      annoCorrente = anno;
+      renderEdizione(anno);
+    });
+
+    function renderStatoVuoto() {
+      contenutoEdizione.innerHTML = `
+        <div class="stato-vuoto-edizione">
+          Nessuna edizione ancora creata. Tocca "+ Nuova edizione" per iniziare.
+        </div>
+      `;
+    }
+
+    // ---------- Gestione partecipanti ----------
+    async function renderEdizione(anno) {
+      if (!anno) { renderStatoVuoto(); return; }
+
+      contenutoEdizione.innerHTML = `
+        <div class="card">
+          <h2>Partecipanti — Edizione ${anno}</h2>
+          <p class="sottotitolo">Inserisci uomini e donne. Il sorteggio si farà nella fase successiva.</p>
+          <div class="griglia-2">
+            <div class="gruppo">
+              <h3>Uomini <span class="conteggio" id="conteggio-uomini">0</span></h3>
+              <div class="form-riga">
+                <input type="text" id="input-uomo" placeholder="Nome e cognome">
+                <button class="btn btn-primario" id="btn-aggiungi-uomo">Aggiungi</button>
+              </div>
+              <ul class="lista-nomi" id="lista-uomini"></ul>
+              <details class="blocco-incolla">
+                <summary>Incolla più nomi insieme</summary>
+                <textarea id="incolla-uomini" placeholder="Un nome per riga&#10;Marco Bianchi&#10;Luca Rossi"></textarea>
+                <button class="btn" id="btn-incolla-uomini">Aggiungi tutti</button>
+              </details>
+            </div>
+            <div class="gruppo">
+              <h3>Donne <span class="conteggio" id="conteggio-donne">0</span></h3>
+              <div class="form-riga">
+                <input type="text" id="input-donna" placeholder="Nome e cognome">
+                <button class="btn btn-primario" id="btn-aggiungi-donna">Aggiungi</button>
+              </div>
+              <ul class="lista-nomi" id="lista-donne"></ul>
+              <details class="blocco-incolla">
+                <summary>Incolla più nomi insieme</summary>
+                <textarea id="incolla-donne" placeholder="Un nome per riga&#10;Sara Galli&#10;Elisa Fontana"></textarea>
+                <button class="btn" id="btn-incolla-donne">Aggiungi tutti</button>
+              </details>
+            </div>
+          </div>
+        </div>
+      `;
+
+      collegaEventiPartecipanti(anno);
+      await caricaPartecipanti(anno);
+    }
+
+    function collegaEventiPartecipanti(anno) {
+      document.getElementById("btn-aggiungi-uomo").addEventListener("click", () => {
+        aggiungiPartecipante(anno, "uomo", document.getElementById("input-uomo"));
+      });
+      document.getElementById("btn-aggiungi-donna").addEventListener("click", () => {
+        aggiungiPartecipante(anno, "donna", document.getElementById("input-donna"));
+      });
+      document.getElementById("input-uomo").addEventListener("keydown", e => {
+        if (e.key === "Enter") aggiungiPartecipante(anno, "uomo", e.target);
+      });
+      document.getElementById("input-donna").addEventListener("keydown", e => {
+        if (e.key === "Enter") aggiungiPartecipante(anno, "donna", e.target);
+      });
+      document.getElementById("btn-incolla-uomini").addEventListener("click", () => {
+        aggiungiBlocco(anno, "uomo", document.getElementById("incolla-uomini"));
+      });
+      document.getElementById("btn-incolla-donne").addEventListener("click", () => {
+        aggiungiBlocco(anno, "donna", document.getElementById("incolla-donne"));
+      });
+    }
+
+    async function aggiungiPartecipante(anno, genere, inputEl) {
+      const nome = inputEl.value.trim();
+      if (!nome) return;
+      await addDoc(collection(db, "tornei", anno, "partecipanti"), { nome, genere });
+      inputEl.value = "";
+      await caricaPartecipanti(anno);
+    }
+
+    async function aggiungiBlocco(anno, genere, textareaEl) {
+      const righe = textareaEl.value.split("\n").map(r => r.trim()).filter(Boolean);
+      if (righe.length === 0) return;
+
+      const batch = writeBatch(db);
+      righe.forEach(nome => {
+        const rifNuovo = doc(collection(db, "tornei", anno, "partecipanti"));
+        batch.set(rifNuovo, { nome, genere });
+      });
+      await batch.commit();
+
+      textareaEl.value = "";
+      mostraMessaggio(`Aggiunti ${righe.length} nomi.`, "successo");
+      await caricaPartecipanti(anno);
+    }
+
+    async function eliminaPartecipante(anno, id) {
+      await deleteDoc(doc(db, "tornei", anno, "partecipanti", id));
+      await caricaPartecipanti(anno);
+    }
+
+    async function caricaPartecipanti(anno) {
+      const snap = await getDocs(collection(db, "tornei", anno, "partecipanti"));
+      const uomini = [];
+      const donne = [];
+
+      snap.forEach(docSnap => {
+        const dati = { id: docSnap.id, ...docSnap.data() };
+        if (dati.genere === "uomo") uomini.push(dati);
+        else donne.push(dati);
+      });
+
+      uomini.sort((a, b) => a.nome.localeCompare(b.nome));
+      donne.sort((a, b) => a.nome.localeCompare(b.nome));
+
+      renderListaNomi("lista-uomini", uomini, anno);
+      renderListaNomi("lista-donne", donne, anno);
+      document.getElementById("conteggio-uomini").textContent = uomini.length;
+      document.getElementById("conteggio-donne").textContent = donne.length;
+    }
+
+    function renderListaNomi(idLista, persone, anno) {
+      const cont = document.getElementById(idLista);
+      if (persone.length === 0) {
+        cont.innerHTML = `<li class="vuoto">Nessun nome inserito.</li>`;
+        return;
+      }
+      cont.innerHTML = persone.map(p => `
+        <li>
+          <span>${p.nome}</span>
+          <button data-id="${p.id}">Elimina</button>
+        </li>
+      `).join("");
+
+      cont.querySelectorAll("button[data-id]").forEach(btn => {
+        btn.addEventListener("click", () => eliminaPartecipante(anno, btn.dataset.id));
+      });
+    }
   </script>
 </body>
 </html>
