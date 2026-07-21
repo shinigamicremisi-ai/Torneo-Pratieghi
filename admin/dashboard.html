@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard amministratore — Torneo di Bocce Pratieghi</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Karla:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+    :root {
+      --cipresso: #2B3D2F;
+      --terracotta: #B8503B;
+      --carta: #F6EFDF;
+      --campo-ghiaia: #E9DCC3;
+      --campo-ghiaia-scuro: #D8C7A3;
+      --inchiostro: #23281F;
+      --inchiostro-soft: #4A4E42;
+      --ottone: #C79A48;
+      --font-display: 'Fraunces', serif;
+      --font-body: 'Karla', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+      --radius: 4px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      background: var(--campo-ghiaia);
+      color: var(--inchiostro);
+    }
+
+    .topbar-admin {
+      background: var(--cipresso);
+      color: var(--carta);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .topbar-admin .titolo-area {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+    }
+
+    .topbar-admin .titolo-area span {
+      color: var(--ottone);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      display: block;
+      letter-spacing: 0.1em;
+    }
+
+    .btn {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      letter-spacing: 0.03em;
+      padding: 0.65rem 1.3rem;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--carta);
+      background: transparent;
+      color: var(--carta);
+      cursor: pointer;
+    }
+
+    .btn:hover { background: var(--carta); color: var(--inchiostro); }
+
+    .sezione {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 3.2rem 1.5rem;
+    }
+
+    .sezione-titolo {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      font-weight: 600;
+      margin: 0 0 0.3rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.7rem;
+    }
+
+    .sezione-titolo .num {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--terracotta);
+      font-weight: 600;
+    }
+
+    .sezione-sottotitolo {
+      color: var(--inchiostro-soft);
+      margin: 0 0 2rem;
+      font-size: 0.98rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar-admin">
+    <div class="titolo-area">
+      Area amministratore
+      <span id="email-utente">Verifica accesso…</span>
+    </div>
+    <button class="btn" id="btn-logout">Esci</button>
+  </div>
+
+  <main class="sezione">
+    <h2 class="sezione-titolo"><span class="num">✓</span> Accesso riuscito</h2>
+    <p class="sezione-sottotitolo">
+      Il login con Firebase funziona correttamente. Questa è una dashboard
+      provvisoria: nella prossima fase costruiamo qui la gestione di
+      edizioni, partecipanti e sorteggio.
+    </p>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLqQY2FLbEJvkkglQE_Eq_bfR1GhYhw1U",
+      authDomain: "torneo-bocce-pratieghi.firebaseapp.com",
+      projectId: "torneo-bocce-pratieghi",
+      storageBucket: "torneo-bocce-pratieghi.firebasestorage.app",
+      messagingSenderId: "1002638493349",
+      appId: "1:1002638493349:web:d80c5675e315aca71f6f4c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const emailUtente = document.getElementById("email-utente");
+    const btnLogout = document.getElementById("btn-logout");
+
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        emailUtente.textContent = user.email;
+      }
+    });
+
+    btnLogout.addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>
