@@ -1,5 +1,5 @@
 
-<!doctype html>
+      <!doctype html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
@@ -333,7 +333,7 @@
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import {
       getFirestore, doc, setDoc, getDoc, collection, getDocs,
-      addDoc, deleteDoc, query, orderBy, writeBatch
+      addDoc, deleteDoc, query, orderBy, writeBatch, documentId
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -387,25 +387,31 @@
 
     // ---------- Gestione edizioni ----------
     async function caricaEdizioni() {
-      const q = query(collection(db, "tornei"), orderBy("__name__", "desc"));
-      const snap = await getDocs(q);
-      selettoreEdizione.innerHTML = "";
+      try {
+        const q = query(collection(db, "tornei"), orderBy(documentId(), "desc"));
+        const snap = await getDocs(q);
+        selettoreEdizione.innerHTML = "";
 
-      if (snap.empty) {
-        selettoreEdizione.innerHTML = `<option value="">Nessuna edizione</option>`;
-        renderStatoVuoto();
-        return;
+        if (snap.empty) {
+          selettoreEdizione.innerHTML = `<option value="">Nessuna edizione</option>`;
+          renderStatoVuoto();
+          return;
+        }
+
+        snap.forEach(docSnap => {
+          const opt = document.createElement("option");
+          opt.value = docSnap.id;
+          opt.textContent = docSnap.id;
+          selettoreEdizione.appendChild(opt);
+        });
+
+        annoCorrente = selettoreEdizione.value;
+        renderEdizione(annoCorrente);
+      } catch (errore) {
+        console.error(errore);
+        selettoreEdizione.innerHTML = `<option value="">Errore</option>`;
+        mostraMessaggio(`Errore nel caricamento delle edizioni: ${errore.message}`, "errore");
       }
-
-      snap.forEach(docSnap => {
-        const opt = document.createElement("option");
-        opt.value = docSnap.id;
-        opt.textContent = docSnap.id;
-        selettoreEdizione.appendChild(opt);
-      });
-
-      annoCorrente = selettoreEdizione.value;
-      renderEdizione(annoCorrente);
     }
 
     selettoreEdizione.addEventListener("change", () => {
