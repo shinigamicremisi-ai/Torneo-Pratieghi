@@ -379,12 +379,14 @@
     });
 
     // ---------- Messaggi ----------
-    function mostraMessaggio(testo, tipo) {
+    
+function mostraMessaggio(testo, tipo) {
       boxMessaggio.textContent = testo;
       boxMessaggio.className = `messaggio visibile ${tipo}`;
-      setTimeout(() => boxMessaggio.classList.remove("visibile"), 4000);
+      if (tipo === "successo") {
+        setTimeout(() => boxMessaggio.classList.remove("visibile"), 4000);
+      }
     }
-
     // ---------- Gestione edizioni ----------
     async function caricaEdizioni() {
       try {
