@@ -5,7 +5,266 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Torneo di Bocce — Pratieghi</title>
   <meta name="description" content="Torneo di Bocce di Pratieghi: partecipanti, coppie, tabellone e campioni dell'edizione in corso.">
-  <link rel="stylesheet" href="css/style.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Karla:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+    :root {
+      --campo-ghiaia: #E9DCC3;
+      --campo-ghiaia-scuro: #D8C7A3;
+      --cipresso: #2B3D2F;
+      --terracotta: #B8503B;
+      --terracotta-scuro: #9A3F2E;
+      --ottone: #C79A48;
+      --carta: #F6EFDF;
+      --inchiostro: #23281F;
+      --inchiostro-soft: #4A4E42;
+      --font-display: 'Fraunces', serif;
+      --font-body: 'Karla', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+      --radius: 4px;
+      --shadow-soft: 0 6px 20px rgba(35, 40, 31, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      background: var(--campo-ghiaia);
+      color: var(--inchiostro);
+      line-height: 1.5;
+    }
+
+    a { color: inherit; }
+
+    .festone {
+      height: 22px;
+      background-image: radial-gradient(circle, var(--ottone) 3.5px, transparent 3.6px);
+      background-size: 28px 22px;
+      background-repeat: repeat-x;
+      background-position: center;
+      opacity: 0.85;
+    }
+
+    .hero {
+      background: var(--cipresso);
+      color: var(--carta);
+      padding: 4rem 1.5rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(246,239,223,0.04) 1px, transparent 1px);
+      background-size: 14px 14px;
+      pointer-events: none;
+    }
+    .hero .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ottone);
+      margin: 0 0 1.1rem;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(2.4rem, 8vw, 4.6rem);
+      line-height: 0.95;
+      margin: 0;
+    }
+    .hero h1 .luogo {
+      display: block;
+      font-style: italic;
+      font-weight: 500;
+      color: var(--terracotta);
+      font-size: 0.55em;
+      margin-top: 0.3em;
+    }
+    .hero .edizione {
+      margin-top: 1.4rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      padding: 0.5rem 1.1rem;
+      border: 1px solid rgba(246,239,223,0.35);
+      border-radius: 999px;
+    }
+    .hero .edizione .pallina {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--terracotta); display: inline-block;
+    }
+
+    .selettore-edizione {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      background: var(--carta);
+      border-bottom: 1px solid var(--campo-ghiaia-scuro);
+      flex-wrap: wrap;
+    }
+    .selettore-edizione select {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      padding: 0.5rem 0.9rem;
+      border: 1.5px solid var(--inchiostro);
+      border-radius: var(--radius);
+      background: var(--carta);
+      color: var(--inchiostro);
+    }
+    .selettore-edizione label {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+    }
+
+    .sezione {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+    .sezione + .sezione { border-top: 1px solid var(--campo-ghiaia-scuro); }
+
+    .sezione-titolo {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3.5vw, 2rem);
+      font-weight: 600;
+      margin: 0 0 0.3rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.7rem;
+    }
+    .sezione-titolo .num {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--terracotta);
+      font-weight: 600;
+    }
+    .sezione-sottotitolo {
+      color: var(--inchiostro-soft);
+      margin: 0 0 1.8rem;
+      font-size: 0.95rem;
+    }
+
+    .griglia-partecipanti {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+    }
+    .gruppo-partecipanti h3 {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--terracotta-scuro);
+      margin: 0 0 0.8rem;
+    }
+    .lista-nomi {
+      list-style: none; margin: 0; padding: 0;
+      display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .lista-nomi li {
+      font-size: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px dashed var(--campo-ghiaia-scuro);
+    }
+
+    .griglia-coppie {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.8rem;
+    }
+    .coppia-card {
+      background: var(--carta);
+      border: 1px solid var(--campo-ghiaia-scuro);
+      border-left: 4px solid var(--terracotta);
+      border-radius: var(--radius);
+      padding: 0.8rem 1rem;
+      display: flex; align-items: center; gap: 0.7rem;
+    }
+    .coppia-card .numero {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--terracotta);
+      font-size: 0.8rem;
+    }
+
+    .tabellone-wrap { overflow-x: auto; padding-bottom: 0.5rem; }
+    .tabellone { display: flex; gap: 2rem; min-width: max-content; padding: 0.5rem 0.1rem; }
+    .turno-colonna {
+      display: flex; flex-direction: column; justify-content: space-around;
+      gap: 0.9rem; min-width: 190px;
+    }
+    .turno-titolo {
+      font-family: var(--font-mono); font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--inchiostro-soft); text-align: center; margin-bottom: 0.3rem;
+    }
+    .match-box {
+      background: var(--carta);
+      border: 1px solid var(--campo-ghiaia-scuro);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .match-box .lato { padding: 0.5rem 0.7rem; font-size: 0.86rem; }
+    .match-box .lato:first-child { border-bottom: 1px solid var(--campo-ghiaia-scuro); }
+    .match-box .lato.vince { background: var(--cipresso); color: var(--carta); font-weight: 600; }
+    .match-box .lato.bye { color: var(--inchiostro-soft); font-style: italic; }
+    .match-box .lato.vuoto { color: var(--campo-ghiaia-scuro); }
+
+    .blocco-campioni {
+      background: var(--cipresso);
+      color: var(--carta);
+      border-radius: var(--radius);
+      padding: 2.4rem 2rem;
+      text-align: center;
+    }
+    .blocco-campioni .trofeo-label {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ottone);
+    }
+    .blocco-campioni .nomi-campioni {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 600;
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      margin: 0.5rem 0 0;
+    }
+
+    .stato-vuoto {
+      padding: 2rem;
+      text-align: center;
+      color: var(--inchiostro-soft);
+      font-style: italic;
+    }
+
+    .footer-pubblico {
+      text-align: center;
+      padding: 2.2rem 1.5rem 3rem;
+      color: var(--inchiostro-soft);
+      font-size: 0.85rem;
+    }
+    .footer-pubblico a {
+      color: var(--terracotta-scuro);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    @media (max-width: 640px) {
+      .sezione { padding: 2.2rem 1.1rem; }
+      .blocco-campioni { padding: 2rem 1.2rem; }
+    }
+  </style>
 </head>
 <body>
 
@@ -24,65 +283,204 @@
   <div class="festone" aria-hidden="true"></div>
 
   <nav class="selettore-edizione">
-    <label for="selettore-anno" style="font-family:var(--font-mono); font-size:0.85rem; align-self:center;">
-      Sfoglia edizione:
-    </label>
-    <select id="selettore-anno" aria-label="Scegli l'edizione da visualizzare"></select>
-    <a class="btn" href="albo-oro.html">Hall of Fame →</a>
+    <label for="selettore-anno">Sfoglia edizione:</label>
+    <select id="selettore-anno"><option>Caricamento…</option></select>
   </nav>
 
-  <main>
-
-    <section class="sezione" id="sez-partecipanti">
-      <h2 class="sezione-titolo"><span class="num">01</span> Partecipanti</h2>
-      <p class="sezione-sottotitolo">Chi scende in campo quest'anno.</p>
-      <div class="griglia-partecipanti">
-        <div class="gruppo-partecipanti">
-          <h3>Uomini</h3>
-          <ul class="lista-nomi" id="lista-uomini"></ul>
-        </div>
-        <div class="gruppo-partecipanti">
-          <h3>Donne</h3>
-          <ul class="lista-nomi" id="lista-donne"></ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="sezione" id="sez-coppie">
-      <h2 class="sezione-titolo"><span class="num">02</span> Coppie</h2>
-      <p class="sezione-sottotitolo">Il risultato del sorteggio.</p>
-      <div class="griglia-coppie" id="griglia-coppie"></div>
-    </section>
-
-    <section class="sezione" id="sez-tabellone">
-      <h2 class="sezione-titolo"><span class="num">03</span> Tabellone</h2>
-      <p class="sezione-sottotitolo">Scorri per vedere tutti i turni, dal primo alla finale.</p>
-      <div class="tabellone-wrap">
-        <div class="tabellone" id="tabellone"></div>
-      </div>
-      <div class="azioni-pagina">
-        <button class="btn" id="btn-pdf">📄 Scarica tabellone (PDF)</button>
-        <button class="btn" id="btn-stampa">🖨️ Stampa</button>
-      </div>
-    </section>
-
-    <section class="sezione" id="sez-campioni">
-      <h2 class="sezione-titolo"><span class="num">04</span> Campioni</h2>
-      <div class="blocco-campioni card" id="blocco-campioni"></div>
-    </section>
-
+  <main id="contenuto-torneo">
+    <div class="stato-vuoto" style="padding:4rem 1.5rem;">Caricamento del torneo…</div>
   </main>
 
   <footer class="footer-pubblico">
     Torneo di Bocce di Pratieghi — <a href="admin/login.html">Area amministratore</a>
   </footer>
 
-  <script type="module" src="js/pagina-pubblica.js"></script>
-  <script>
-    document.getElementById("btn-stampa").addEventListener("click", () => window.print());
-    document.getElementById("btn-pdf").addEventListener("click", () => {
-      alert("L'esportazione PDF sarà attivata nella prossima fase del progetto.");
-    });
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore, doc, getDoc, collection, getDocs
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLqQY2FLbEJvkkglQE_Eq_bfR1GhYhw1U",
+      authDomain: "torneo-bocce-pratieghi.firebaseapp.com",
+      projectId: "torneo-bocce-pratieghi",
+      storageBucket: "torneo-bocce-pratieghi.firebasestorage.app",
+      messagingSenderId: "1002638493349",
+      appId: "1:1002638493349:web:d80c5675e315aca71f6f4c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const selettore = document.getElementById("selettore-anno");
+    const badgeEdizione = document.getElementById("badge-edizione");
+    const contenuto = document.getElementById("contenuto-torneo");
+
+    function etichettaTurno(numeroMatch) {
+      if (numeroMatch === 1) return "Finale";
+      if (numeroMatch === 2) return "Semifinali";
+      if (numeroMatch === 4) return "Quarti";
+      if (numeroMatch === 8) return "Ottavi";
+      return `${numeroMatch * 2} squadre`;
+    }
+
+    function renderMatchBox(m) {
+      if (!m) {
+        return `
+          <div class="match-box">
+            <div class="lato vuoto">In attesa</div>
+            <div class="lato vuoto">In attesa</div>
+          </div>
+        `;
+      }
+      const classeA = [
+        m.vincitore === "a" ? "vince" : "",
+        m.squadraA === "BYE" ? "bye" : "",
+        !m.squadraA ? "vuoto" : ""
+      ].filter(Boolean).join(" ");
+      const classeB = [
+        m.vincitore === "b" ? "vince" : "",
+        m.squadraB === "BYE" ? "bye" : "",
+        !m.squadraB ? "vuoto" : ""
+      ].filter(Boolean).join(" ");
+      return `
+        <div class="match-box">
+          <div class="lato ${classeA}">${m.squadraA || "In attesa"}</div>
+          <div class="lato ${classeB}">${m.squadraB || "In attesa"}</div>
+        </div>
+      `;
+    }
+
+    async function popolaSelettore() {
+      const snap = await getDocs(collection(db, "tornei"));
+      if (snap.empty) {
+        selettore.innerHTML = `<option value="">Nessuna edizione</option>`;
+        contenuto.innerHTML = `<div class="stato-vuoto" style="padding:4rem 1.5rem;">Nessuna edizione del torneo è stata ancora creata.</div>`;
+        return;
+      }
+
+      const anni = [];
+      snap.forEach(d => anni.push(d.id));
+      anni.sort((a, b) => b.localeCompare(a));
+
+      selettore.innerHTML = anni.map(a => `<option value="${a}">${a}</option>`).join("");
+      selettore.addEventListener("change", e => renderEdizione(e.target.value));
+
+      renderEdizione(anni[0]);
+    }
+
+    async function renderEdizione(anno) {
+      badgeEdizione.textContent = `Edizione ${anno}`;
+      contenuto.innerHTML = `<div class="stato-vuoto" style="padding:4rem 1.5rem;">Caricamento…</div>`;
+
+      const [snapPartecipanti, snapCoppie, snapIncontri] = await Promise.all([
+        getDocs(collection(db, "tornei", anno, "partecipanti")),
+        getDocs(collection(db, "tornei", anno, "coppie")),
+        getDocs(collection(db, "tornei", anno, "incontri"))
+      ]);
+
+      const uomini = [];
+      const donne = [];
+      snapPartecipanti.forEach(d => {
+        const dati = d.data();
+        if (dati.genere === "uomo") uomini.push(dati.nome); else donne.push(dati.nome);
+      });
+      uomini.sort((a, b) => a.localeCompare(b));
+      donne.sort((a, b) => a.localeCompare(b));
+
+      const coppie = [];
+      snapCoppie.forEach(d => coppie.push(d.data()));
+      coppie.sort((a, b) => a.numero - b.numero);
+
+      let html = "";
+
+      html += `
+        <section class="sezione">
+          <h2 class="sezione-titolo"><span class="num">01</span> Partecipanti</h2>
+          <p class="sezione-sottotitolo">Chi scende in campo quest'anno.</p>
+          <div class="griglia-partecipanti">
+            <div class="gruppo-partecipanti">
+              <h3>Uomini</h3>
+              <ul class="lista-nomi">${uomini.length ? uomini.map(n => `<li>${n}</li>`).join("") : `<li class="stato-vuoto">Nessuno inserito.</li>`}</ul>
+            </div>
+            <div class="gruppo-partecipanti">
+              <h3>Donne</h3>
+              <ul class="lista-nomi">${donne.length ? donne.map(n => `<li>${n}</li>`).join("") : `<li class="stato-vuoto">Nessuna inserita.</li>`}</ul>
+            </div>
+          </div>
+        </section>
+      `;
+
+      html += `
+        <section class="sezione">
+          <h2 class="sezione-titolo"><span class="num">02</span> Coppie</h2>
+          <p class="sezione-sottotitolo">Il risultato del sorteggio.</p>
+          ${coppie.length
+            ? `<div class="griglia-coppie">${coppie.map(c => `
+                <div class="coppia-card">
+                  <span class="numero">${String(c.numero).padStart(2, "0")}</span>
+                  <span>${c.uomo} — ${c.donna}</span>
+                </div>
+              `).join("")}</div>`
+            : `<div class="stato-vuoto">Il sorteggio non è stato ancora effettuato.</div>`}
+        </section>
+      `;
+
+      let finaleDecisa = null;
+
+      if (!snapIncontri.empty) {
+        const perTurno = {};
+        let maxTurno = 0;
+        snapIncontri.forEach(d => {
+          const dati = d.data();
+          if (!perTurno[dati.turno]) perTurno[dati.turno] = [];
+          perTurno[dati.turno][dati.posizione] = dati;
+          if (dati.turno > maxTurno) maxTurno = dati.turno;
+        });
+
+        const colonne = [];
+        for (let t = 0; t <= maxTurno; t++) colonne.push(perTurno[t] || []);
+
+        html += `
+          <section class="sezione">
+            <h2 class="sezione-titolo"><span class="num">03</span> Tabellone</h2>
+            <p class="sezione-sottotitolo">Scorri per vedere tutti i turni, dal primo alla finale.</p>
+            <div class="tabellone-wrap">
+              <div class="tabellone">
+                ${colonne.map(matchList => `
+                  <div class="turno-colonna">
+                    <div class="turno-titolo">${etichettaTurno(matchList.length)}</div>
+                    ${matchList.map(m => renderMatchBox(m)).join("")}
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          </section>
+        `;
+
+        const ultimoTurno = colonne[colonne.length - 1];
+        if (ultimoTurno && ultimoTurno[0] && ultimoTurno[0].vincitore) {
+          const m = ultimoTurno[0];
+          finaleDecisa = m.vincitore === "a" ? m.squadraA : m.squadraB;
+        }
+      }
+
+      html += `
+        <section class="sezione">
+          <h2 class="sezione-titolo"><span class="num">04</span> Campioni</h2>
+          <div class="blocco-campioni">
+            ${finaleDecisa
+              ? `<div class="trofeo-label">Campioni ${anno}</div><p class="nomi-campioni">${finaleDecisa}</p>`
+              : `<div class="trofeo-label">Torneo in corso</div><p class="nomi-campioni">Il campione si scoprirà in campo 🎯</p>`}
+          </div>
+        </section>
+      `;
+
+      contenuto.innerHTML = html;
+    }
+
+    popolaSelettore();
   </script>
 </body>
 </html>
