@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hall of Fame — Torneo di Bocce Pratieghi</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Karla:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+    :root {
+      --campo-ghiaia: #E9DCC3;
+      --campo-ghiaia-scuro: #D8C7A3;
+      --cipresso: #2B3D2F;
+      --terracotta: #B8503B;
+      --terracotta-scuro: #9A3F2E;
+      --ottone: #C79A48;
+      --carta: #F6EFDF;
+      --inchiostro: #23281F;
+      --inchiostro-soft: #4A4E42;
+      --font-display: 'Fraunces', serif;
+      --font-body: 'Karla', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+      --radius: 4px;
+      --shadow-soft: 0 6px 20px rgba(35, 40, 31, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      background: var(--campo-ghiaia);
+      color: var(--inchiostro);
+      line-height: 1.5;
+    }
+
+    a { color: inherit; }
+
+    .festone {
+      height: 22px;
+      background-image: radial-gradient(circle, var(--ottone) 3.5px, transparent 3.6px);
+      background-size: 28px 22px;
+      background-repeat: repeat-x;
+      background-position: center;
+      opacity: 0.85;
+    }
+
+    .hero {
+      background: var(--cipresso);
+      color: var(--carta);
+      padding: 3.5rem 1.5rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(246,239,223,0.04) 1px, transparent 1px);
+      background-size: 14px 14px;
+      pointer-events: none;
+    }
+    .hero .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ottone);
+      margin: 0 0 1rem;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-style: italic;
+      font-size: clamp(2rem, 6vw, 3.4rem);
+      margin: 0;
+    }
+
+    .sezione {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    .tabella-albo {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--carta);
+      box-shadow: var(--shadow-soft);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .tabella-albo th {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: left;
+      padding: 0.8rem 1.1rem;
+      color: var(--inchiostro-soft);
+      border-bottom: 2px solid var(--inchiostro);
+      background: rgba(43,61,47,0.04);
+    }
+    .tabella-albo td {
+      padding: 0.9rem 1.1rem;
+      border-bottom: 1px dashed var(--campo-ghiaia-scuro);
+    }
+    .tabella-albo tr:last-child td { border-bottom: none; }
+    .tabella-albo tr:hover td { background: rgba(184, 80, 59, 0.06); }
+    .tabella-albo .anno {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--terracotta);
+    }
+    .tabella-albo .non-disputato {
+      color: var(--inchiostro-soft);
+      font-style: italic;
+    }
+
+    .stato-vuoto {
+      padding: 3rem 1.5rem;
+      text-align: center;
+      color: var(--inchiostro-soft);
+      font-style: italic;
+    }
+
+    .footer-pubblico {
+      text-align: center;
+      padding: 1.5rem 1.5rem 3rem;
+      font-size: 0.85rem;
+    }
+    .footer-pubblico a {
+      color: var(--terracotta-scuro);
+      font-weight: 600;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="hero">
+    <p class="eyebrow">Torneo di Bocce — Pratieghi</p>
+    <h1>Hall of Fame</h1>
+  </header>
+
+  <div class="festone" aria-hidden="true"></div>
+
+  <main class="sezione">
+    <div id="contenuto-albo">
+      <div class="stato-vuoto">Caricamento…</div>
+    </div>
+  </main>
+
+  <footer class="footer-pubblico">
+    <a href="index.html">← Torna alla pagina del torneo</a>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLqQY2FLbEJvkkglQE_Eq_bfR1GhYhw1U",
+      authDomain: "torneo-bocce-pratieghi.firebaseapp.com",
+      projectId: "torneo-bocce-pratieghi",
+      storageBucket: "torneo-bocce-pratieghi.firebasestorage.app",
+      messagingSenderId: "1002638493349",
+      appId: "1:1002638493349:web:d80c5675e315aca71f6f4c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const contenuto = document.getElementById("contenuto-albo");
+
+    async function carica() {
+      const snap = await getDocs(collection(db, "alboOro"));
+      if (snap.empty) {
+        contenuto.innerHTML = `<div class="stato-vuoto">L'albo d'oro non contiene ancora edizioni.</div>`;
+        return;
+      }
+
+      const voci = [];
+      snap.forEach(d => voci.push({ anno: d.id, ...d.data() }));
+      voci.sort((a, b) => b.anno.localeCompare(a.anno));
+
+      contenuto.innerHTML = `
+        <table class="tabella-albo">
+          <thead>
+            <tr>
+              <th>Anno</th>
+              <th>Coppia vincitrice</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${voci.map(v => `
+              <tr>
+                <td class="anno">${v.anno}</td>
+                <td>
+                  ${v.nonDisputato
+                    ? `<span class="non-disputato">Non disputato${v.motivo ? " — " + v.motivo : ""}</span>`
+                    : (v.coppia || "—")}
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    carica();
+  </script>
+</body>
+</html>
