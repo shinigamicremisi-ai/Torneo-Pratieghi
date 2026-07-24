@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Regolamento — Torneo di Bocce Pratieghi</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Karla:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+    :root {
+      --campo-ghiaia: #E9DCC3;
+      --campo-ghiaia-scuro: #D8C7A3;
+      --cipresso: #2B3D2F;
+      --terracotta: #B8503B;
+      --terracotta-scuro: #9A3F2E;
+      --ottone: #C79A48;
+      --carta: #F6EFDF;
+      --inchiostro: #23281F;
+      --inchiostro-soft: #4A4E42;
+      --font-display: 'Fraunces', serif;
+      --font-body: 'Karla', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+      --radius: 4px;
+      --shadow-soft: 0 6px 20px rgba(35, 40, 31, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      background: var(--campo-ghiaia);
+      color: var(--inchiostro);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; }
+
+    .festone {
+      height: 22px;
+      background-image: radial-gradient(circle, var(--ottone) 3.5px, transparent 3.6px);
+      background-size: 28px 22px;
+      background-repeat: repeat-x;
+      background-position: center;
+      opacity: 0.85;
+    }
+
+    .hero {
+      background: var(--cipresso);
+      color: var(--carta);
+      padding: 3.5rem 1.5rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(246,239,223,0.04) 1px, transparent 1px);
+      background-size: 14px 14px;
+      pointer-events: none;
+    }
+    .hero .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ottone);
+      margin: 0 0 1rem;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-style: italic;
+      font-size: clamp(2rem, 6vw, 3.4rem);
+      margin: 0;
+    }
+
+    .sezione {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    .regola {
+      background: var(--carta);
+      border: 1px solid var(--campo-ghiaia-scuro);
+      border-left: 4px solid var(--terracotta);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1.2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .regola h2 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      margin: 0 0 0.9rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+    }
+
+    .regola h2 .numero {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--terracotta);
+      font-weight: 600;
+    }
+
+    .regola ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    .regola li {
+      margin-bottom: 0.5rem;
+    }
+    .regola li:last-child { margin-bottom: 0; }
+
+    .footer-pubblico {
+      text-align: center;
+      padding: 1.5rem 1.5rem 3rem;
+      font-size: 0.85rem;
+    }
+    .footer-pubblico a {
+      color: var(--terracotta-scuro);
+      font-weight: 600;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="hero">
+    <p class="eyebrow">Torneo di Bocce — Pratieghi</p>
+    <h1>Regolamento</h1>
+  </header>
+
+  <div class="festone" aria-hidden="true"></div>
+
+  <main class="sezione">
+
+    <div class="regola">
+      <h2><span class="numero">01</span> Inizio del gioco</h2>
+      <ul>
+        <li>Si lancia il pallino e successivamente le bocce a turno.</li>
+        <li>Vince il punto la squadra con la boccia più vicina al pallino.</li>
+      </ul>
+    </div>
+
+    <div class="regola">
+      <h2><span class="numero">02</span> Accosto</h2>
+      <ul>
+        <li>Lo scopo è avvicinare la propria boccia al pallino.</li>
+        <li>La boccia deve essere lanciata regolarmente sul campo.</li>
+        <li>La boccia che tocca la sponda durante il lancio è nulla.</li>
+        <li>Se esce dal campo viene rimossa.</li>
+      </ul>
+    </div>
+
+    <div class="regola">
+      <h2><span class="numero">03</span> Tiro di raffa</h2>
+      <ul>
+        <li>Prima del tiro si dichiara il bersaglio da colpire.</li>
+        <li>La boccia tirata deve colpire il bersaglio dichiarato.</li>
+        <li>Il tiro è valido solo se eseguito regolarmente, senza usare le sponde come rimbalzo.</li>
+        <li>Le bocce spostate dopo un tiro valido restano nella nuova posizione.</li>
+      </ul>
+    </div>
+
+    <div class="regola">
+      <h2><span class="numero">04</span> Tiro di volo</h2>
+      <ul>
+        <li>Prima del tiro si dichiara il bersaglio.</li>
+        <li>La boccia deve colpire il bersaglio direttamente al volo (o con la battuta consentita dalle regole ufficiali).</li>
+        <li>Non è consentito utilizzare la sponda per il tiro.</li>
+      </ul>
+    </div>
+
+    <div class="regola">
+      <h2><span class="numero">05</span> Assegnazione dei punti</h2>
+      <ul>
+        <li>Al termine della giocata si conta 1 punto per ogni boccia più vicina al pallino rispetto alla migliore boccia avversaria.</li>
+        <li>La partita termina normalmente a 12 punti.</li>
+      </ul>
+    </div>
+
+    <div class="regola">
+      <h2><span class="numero">06</span> Comportamento in campo</h2>
+      <ul>
+        <li>Non calpestare il terreno di gioco.</li>
+        <li>Non spostare bocce o pallino prima della fine della mano.</li>
+        <li>Rispettare gli avversari e giocare in sicurezza.</li>
+      </ul>
+    </div>
+
+  </main>
+
+  <footer class="footer-pubblico">
+    <a href="index.html">← Torna alla pagina del torneo</a>
+  </footer>
+
+</body>
+</html>
