@@ -125,6 +125,26 @@
       font-size: 0.85rem;
     }
 
+    .btn-nav {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.55rem 1.1rem;
+      border-radius: 999px;
+      border: 1.5px solid var(--terracotta);
+      color: var(--terracotta-scuro);
+      text-decoration: none;
+      background: rgba(184, 80, 59, 0.06);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .btn-nav:hover {
+      background: var(--terracotta);
+      color: var(--carta);
+    }
+
     .sezione {
       max-width: 1080px;
       margin: 0 auto;
@@ -285,7 +305,8 @@
   <nav class="selettore-edizione">
     <label for="selettore-anno">Sfoglia edizione:</label>
     <select id="selettore-anno"><option>Caricamento…</option></select>
-    <a href="albo-oro.html" style="font-family:var(--font-mono); font-size:0.85rem; color:var(--terracotta-scuro); text-decoration:none; margin-left:0.5rem;">Hall of Fame →</a>
+    <a href="albo-oro.html" class="btn-nav">🏆 Hall of Fame</a>
+    <a href="regolamento.html" class="btn-nav">📖 Regolamento</a>
   </nav>
 
   <main id="contenuto-torneo">
