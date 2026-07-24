@@ -316,3 +316,227 @@
     <a href="albo-oro.html" class="btn-nav">🏆 Hall of Fame</a>
     <a href="regolamento.html" class="btn-nav">📖 Regolamento</a>
   </nav>
+
+  <div class="barra-selettore">
+    <label for="selettore-anno">Sfoglia edizione:</label>
+    <select id="selettore-anno"><option>Caricamento…</option></select>
+  </div>
+
+  <main id="contenuto-torneo">
+    <div class="stato-vuoto" style="padding:4rem 1.5rem;">Caricamento del torneo…</div>
+  </main>
+
+  <footer class="footer-pubblico">
+    Torneo di Bocce di Pratieghi — <a href="admin/login.html">Area amministratore</a>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore, doc, getDoc, collection, getDocs
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLqQY2FLbEJvkkglQE_Eq_bfR1GhYhw1U",
+      authDomain: "torneo-bocce-pratieghi.firebaseapp.com",
+      projectId: "torneo-bocce-pratieghi",
+      storageBucket: "torneo-bocce-pratieghi.firebasestorage.app",
+      messagingSenderId: "1002638493349",
+      appId: "1:1002638493349:web:d80c5675e315aca71f6f4c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const selettore = document.getElementById("selettore-anno");
+    const badgeEdizione = document.getElementById("badge-edizione");
+    const contenuto = document.getElementById("contenuto-torneo");
+
+    function etichettaTurno(numeroMatch) {
+      if (numeroMatch === 1) return "Finale";
+      if (numeroMatch === 2) return "Semifinali";
+      if (numeroMatch === 4) return "Quarti";
+      if (numeroMatch === 8) return "Ottavi";
+      return `${numeroMatch * 2} squadre`;
+    }
+
+    function renderMatchBox(m) {
+      if (!m) {
+        return `
+          <div class="match-box">
+            <div class="lato vuoto">In attesa</div>
+            <div class="lato vuoto">In attesa</div>
+          </div>
+        `;
+      }
+      const classeA = [
+        m.vincitore === "a" ? "vince" : "",
+        m.squadraA === "BYE" ? "bye" : "",
+        !m.squadraA ? "vuoto" : ""
+      ].filter(Boolean).join(" ");
+      const classeB = [
+        m.vincitore === "b" ? "vince" : "",
+        m.squadraB === "BYE" ? "bye" : "",
+        !m.squadraB ? "vuoto" : ""
+      ].filter(Boolean).join(" ");
+      return `
+        <div class="match-box">
+          <div class="lato ${classeA}">${m.squadraA || "In attesa"}</div>
+          <div class="lato ${classeB}">${m.squadraB || "In attesa"}</div>
+        </div>
+      `;
+    }
+
+    async function popolaSelettore() {
+      const snap = await getDocs(collection(db, "tornei"));
+      if (snap.empty) {
+        selettore.innerHTML = `<option value="">Nessuna edizione</option>`;
+        contenuto.innerHTML = `<div class="stato-vuoto" style="padding:4rem 1.5rem;">Nessuna edizione del torneo è stata ancora creata.</div>`;
+        return;
+      }
+
+      const anni = [];
+      snap.forEach(d => {
+        const dati = d.data();
+        if (dati.visibile !== false) anni.push(d.id);
+      });
+
+      if (anni.length === 0) {
+        selettore.innerHTML = `<option value="">Nessuna edizione</option>`;
+        contenuto.innerHTML = `<div class="stato-vuoto" style="padding:4rem 1.5rem;">Nessuna edizione pubblica al momento.</div>`;
+        return;
+      }
+      anni.sort((a, b) => b.localeCompare(a));
+
+      selettore.innerHTML = anni.map(a => `<option value="${a}">${a}</option>`).join("");
+      selettore.addEventListener("change", e => renderEdizione(e.target.value));
+
+      renderEdizione(anni[0]);
+    }
+
+    async function renderEdizione(anno) {
+      badgeEdizione.textContent = `Edizione ${anno}`;
+      contenuto.innerHTML = `<div class="stato-vuoto" style="padding:4rem 1.5rem;">Caricamento…</div>`;
+
+      const [snapTorneo, snapPartecipanti, snapCoppie, snapIncontri] = await Promise.all([
+        getDoc(doc(db, "tornei", anno)),
+        getDocs(collection(db, "tornei", anno, "partecipanti")),
+        getDocs(collection(db, "tornei", anno, "coppie")),
+        getDocs(collection(db, "tornei", anno, "incontri"))
+      ]);
+
+      const datiTorneo = snapTorneo.exists() ? snapTorneo.data() : {};
+
+      const uomini = [];
+      const donne = [];
+      snapPartecipanti.forEach(d => {
+        const dati = d.data();
+        if (dati.genere === "uomo") uomini.push(dati.nome); else donne.push(dati.nome);
+      });
+      uomini.sort((a, b) => a.localeCompare(b));
+      donne.sort((a, b) => a.localeCompare(b));
+
+      const coppie = [];
+      snapCoppie.forEach(d => coppie.push(d.data()));
+      coppie.sort((a, b) => a.numero - b.numero);
+
+      let html = "";
+
+      if (datiTorneo.fotoCopertina) {
+        html += `
+          <div style="max-width:1080px; margin:0 auto; padding:2rem 1.5rem 0;">
+            <img src="${datiTorneo.fotoCopertina}" alt="Foto edizione ${anno}"
+                 style="width:100%; max-height:420px; object-fit:cover; border-radius:4px; box-shadow:0 6px 20px rgba(35,40,31,0.12);">
+          </div>
+        `;
+      }
+
+      html += `
+        <section class="sezione">
+          <h2 class="sezione-titolo"><span class="num">01</span> Partecipanti</h2>
+          <p class="sezione-sottotitolo">Chi scende in campo quest'anno.</p>
+          <div class="griglia-partecipanti">
+            <div class="gruppo-partecipanti">
+              <h3>Uomini</h3>
+              <ul class="lista-nomi">${uomini.length ? uomini.map(n => `<li>${n}</li>`).join("") : `<li class="stato-vuoto">Nessuno inserito.</li>`}</ul>
+            </div>
+            <div class="gruppo-partecipanti">
+              <h3>Donne</h3>
+              <ul class="lista-nomi">${donne.length ? donne.map(n => `<li>${n}</li>`).join("") : `<li class="stato-vuoto">Nessuna inserita.</li>`}</ul>
+            </div>
+          </div>
+        </section>
+      `;
+
+      html += `
+        <section class="sezione">
+          <h2 class="sezione-titolo"><span class="num">02</span> Coppie</h2>
+          <p class="sezione-sottotitolo">Il risultato del sorteggio.</p>
+          ${coppie.length
+            ? `<div class="griglia-coppie">${coppie.map(c => `
+                <div class="coppia-card">
+                  <span class="numero">${String(c.numero).padStart(2, "0")}</span>
+                  <span>${c.uomo} — ${c.donna}</span>
+                </div>
+              `).join("")}</div>`
+            : `<div class="stato-vuoto">Il sorteggio non è stato ancora effettuato.</div>`}
+        </section>
+      `;
+
+      let finaleDecisa = null;
+
+      if (!snapIncontri.empty) {
+        const perTurno = {};
+        let maxTurno = 0;
+        snapIncontri.forEach(d => {
+          const dati = d.data();
+          if (!perTurno[dati.turno]) perTurno[dati.turno] = [];
+          perTurno[dati.turno][dati.posizione] = dati;
+          if (dati.turno > maxTurno) maxTurno = dati.turno;
+        });
+
+        const colonne = [];
+        for (let t = 0; t <= maxTurno; t++) colonne.push(perTurno[t] || []);
+
+        html += `
+          <section class="sezione">
+            <h2 class="sezione-titolo"><span class="num">03</span> Tabellone</h2>
+            <p class="sezione-sottotitolo">Scorri per vedere tutti i turni, dal primo alla finale.</p>
+            <div class="tabellone-wrap">
+              <div class="tabellone">
+                ${colonne.map(matchList => `
+                  <div class="turno-colonna">
+                    <div class="turno-titolo">${etichettaTurno(matchList.length)}</div>
+                    ${matchList.map(m => renderMatchBox(m)).join("")}
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          </section>
+        `;
+
+        const ultimoTurno = colonne[colonne.length - 1];
+        if (ultimoTurno && ultimoTurno[0] && ultimoTurno[0].vincitore) {
+          const m = ultimoTurno[0];
+          finaleDecisa = m.vincitore === "a" ? m.squadraA : m.squadraB;
+        }
+      }
+
+      html += `
+        <section class="sezione">
+          <h2 class="sezione-titolo"><span class="num">04</span> Campioni</h2>
+          <div class="blocco-campioni">
+            ${finaleDecisa
+              ? `<div class="trofeo-label">Campioni ${anno}</div><p class="nomi-campioni">${finaleDecisa}</p>`
+              : `<div class="trofeo-label">Torneo in corso</div><p class="nomi-campioni">Il campione si scoprirà in campo 🎯</p>`}
+          </div>
+        </section>
+      `;
+
+      contenuto.innerHTML = html;
+    }
+
+    popolaSelettore();
+  </script>
+</body>
+</html>
